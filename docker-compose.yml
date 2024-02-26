@@ -33,6 +33,20 @@ services:
             - ./database/dbdata:/var/lib/mysql
         networks:
             - laravel
+    phpmyadmin:
+        image: phpmyadmin
+        container_name: phpmyadmin
+        ports:
+            - "8000:80"
+        environment:
+            PMA_HOST: mysql
+            PMA_USER: ${DB_USERNAME}
+            PMA_PASSWORD: ${DB_PASSWORD}
+            UPLOAD_LIMIT: 100M
+        networks:
+            - laravel
+        depends_on:
+            - mysql
 networks:
     laravel:
         driver: bridge
