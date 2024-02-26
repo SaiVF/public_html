@@ -1,0 +1,93 @@
+version: '3.7'
+
+services:
+    app:
+        build:
+            context: .
+            dockerfile: .docker/Dockerfile
+        container_name: app
+        ports:
+            - "80:80"
+        volumes:
+            - ./:/var/www/html
+        working_dir: /var/www/html
+        networks:
+            - laravel
+        depends_on:
+            - mysql
+    mysql:
+        image: 'mysql/mysql-server:8.0'
+        container_name: mysql
+        command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+        restart: unless-stopped
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_ROOT_HOST: "%"
+            MYSQL_DATABASE: ${DB_DATABASE}
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+            MYSQL_USER: ${DB_USERNAME}
+            MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+        volumes:
+            - ./database/dbdata:/var/lib/mysql
+        networks:
+            - laravel
+networks:
+    laravel:
+        driver: bridge
+
+
+
+
+# version: '3'
+
+# services:
+#   app:
+#     build:
+#       context: .
+#       dockerfile: Dockerfile
+#     ports:
+#       - "8080:8080"
+#     # depends_on:
+#     #   - db
+#     environment:
+#       DB_HOST: localhost
+#       DB_DATABASE: hallate_hallate
+#       DB_USERNAME: hallate_hallate
+#       DB_PASSWORD: 20lemuluKO
+#       DB_PORT: 3306
+#     # networks:
+#     #   - laravel
+#     volumes:
+#       - /Users/santiagovargas/Documents/Proyectos/laravel9/my-site/hallate-web:/var/www/html
+
+#   db:
+#     image: mysql
+#     volumes:
+#       - ./mysql-data:/var/lib/mysql
+#     environment:
+#       MYSQL_ROOT_PASSWORD: root_pass
+#       MYSQL_DATABASE: hallate_hallate
+#       MYSQL_USER: hallate_hallate
+#       MYSQL_PASSWORD: 20lemuluKO
+#     networks:
+#       - laravel
+
+#   phpmyadmin:
+#     image: phpmyadmin
+#     ports:
+#       - "8000:80"
+#     environment:
+#       PMA_ARBITRARY: 1
+#     networks:
+#       - laravel
+#     depends_on:
+#       - db
+
+# volumes:
+#   mysql-data:
+#     driver: local
+
+# networks:
+#   laravel:

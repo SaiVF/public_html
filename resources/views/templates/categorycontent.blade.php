@@ -1,0 +1,6 @@
+
+
+<div>
+	{!! $content->content !!}
+</div>
+
